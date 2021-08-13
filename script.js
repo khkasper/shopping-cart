@@ -5,12 +5,10 @@ function saveInLocalStorage() {
 }
 
 async function sumPrices() {
-  const cartItemList = document.querySelectorAll('.cart__item');
-  let sum = 0;
-  cartItemList.forEach((item) => {
-    sum += Math.round((parseFloat(item.innerText.split('$')[1]) * 100)) / 100;
-  });
-  document.querySelector('.total-price').innerText = `Preço total: R$ ${sum}`;
+  const computers = [...document.querySelectorAll('li.cart__item')];
+  const getPrices = computers.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = getPrices;
 }
 
 function createProductImageElement(imageSource) {
