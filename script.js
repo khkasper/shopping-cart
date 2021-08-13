@@ -1,3 +1,5 @@
+// Agradecimento aos colegas Marcello, Lucas, Pedro, Anna, ao monitor Matheus e todos os demais colegas que me ajudaram a solucionar dúvidas e contribuíram na compreensão do projeto e na solução das dificuldades.
+
 let cartItems;
 
 function saveInLocalStorage() {
@@ -60,6 +62,7 @@ async function createProductList() {
   const request = await fetch(url);
   const response = await request.json();
   const results = await response.results;
+  document.querySelector('.loading').remove();
   results.forEach(({ id, title, thumbnail }) => {
     const productItem = {
       sku: id,
@@ -103,9 +106,10 @@ function getLocalStorage() {
 }
 
 function emptyCart() {
-  document.querySelector('.empty-cart').addEventListener('click', () => {
-    document.querySelectorAll('.cart__item')
-      .forEach((item) => item.parentNode.removeChild(item));
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', () => {
+    const allCartItems = document.querySelectorAll('.cart__item');
+    allCartItems.forEach((item) => item.parentNode.removeChild(item));
     sumPrices();
     saveInLocalStorage();
   });
