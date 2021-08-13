@@ -4,6 +4,15 @@ function saveInLocalStorage() {
   localStorage.setItem('productList', cartItems.innerHTML);
 }
 
+async function sumPrices() {
+  const cartItemList = document.querySelectorAll('.cart__item');
+  let sum = 0;
+  cartItemList.forEach((item) => {
+    sum += Math.round((parseFloat(item.innerText.split('$')[1]) * 100)) / 100;
+  });
+  document.querySelector('.total-price').innerText = `Preço total: R$ ${sum}`;
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -36,6 +45,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  sumPrices();
   saveInLocalStorage();
 }
 
@@ -47,7 +57,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const createProductList = async () => {
+async function createProductList() {
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const request = await fetch(url);
   const response = await request.json();
@@ -61,9 +71,9 @@ const createProductList = async () => {
     const itemsSection = document.querySelector('.items');
     itemsSection.appendChild(createProductItemElement(productItem));
   });
-};
+}
 
-const addItemsToShoppingCart = () => {
+function addItemsToShoppingCart() {
   document.querySelector('.items').addEventListener('click', async (event) => {
     if (event.target.className === 'item__add') {
       const itemSku = getSkuFromProductItem(event.target.parentElement);
@@ -77,11 +87,12 @@ const addItemsToShoppingCart = () => {
           salePrice: data.price,
         };
         cartItems.appendChild(createCartItemElement(productItem));
-        saveInLocalStorage();
       });
     }
+    sumPrices();
+    saveInLocalStorage();
   });
-};
+}
 
 function getLocalStorage() {
   cartItems.innerHTML = localStorage.getItem('productList');
@@ -90,6 +101,7 @@ function getLocalStorage() {
       cartItemClickListener(event);
     }
   }));
+  sumPrices();
 }
 
 window.onload = () => {
