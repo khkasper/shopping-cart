@@ -79,16 +79,14 @@ function addItemsToShoppingCart() {
     if (event.target.className === 'item__add') {
       const itemSku = getSkuFromProductItem(event.target.parentElement);
       const url = `https://api.mercadolibre.com/items/${itemSku}`;
-      await fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        const productItem = {
-          sku: itemSku,
-          name: data.title,
-          salePrice: data.price,
+      const request = await fetch(url);
+      const response = await request.json();
+        const productPrice = {
+          sku: response.id,
+          name: response.title,
+          salePrice: response.price,
         };
-        cartItems.appendChild(createCartItemElement(productItem));
-      });
+      cartItems.appendChild(createCartItemElement(productPrice));
     }
     sumPrices();
     saveInLocalStorage();
