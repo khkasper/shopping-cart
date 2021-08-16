@@ -106,8 +106,8 @@ function getLocalStorage() {
 function emptyCart() {
   const emptyCartButton = document.querySelector('.empty-cart');
   emptyCartButton.addEventListener('click', () => {
-    const allCartItems = document.querySelectorAll('.cart__item');
-    allCartItems.forEach((item) => item.parentNode.removeChild(item));
+    const allCartItems = document.querySelector('ol');
+    allCartItems.innerHTML = '';
     sumPrices();
     saveInLocalStorage();
   });
